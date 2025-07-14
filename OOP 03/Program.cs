@@ -206,31 +206,118 @@ namespace OOP_03
                        $"Salary: {Salary:C}, Start Date: {StartDate}";
             }
             #endregion
-        }
-        static void Main(string[] args)
+
+            #region Q4 Sort the employees based on their hire date then Print the sorted array.
+            enum JobLevel
+            {
+                Guest,
+                Developer,
+                Secretary,
+                DBA,
+                SecurityOfficer
+            }
+
+            class StartDateInfo
+            {
+                public int Day { get; }
+                public int Month { get; }
+                public int Year { get; }
+
+                public StartDateInfo(int day, int month, int year)
+                {
+                    if (day < 1 || day > 31) throw new ArgumentException("Day must be 1–31");
+                    if (month < 1 || month > 12) throw new ArgumentException("Month must be 1–12");
+                    if (year < 1900 || year > DateTime.Now.Year) throw new ArgumentException("Year is out of range");
+
+                    Day = day;
+                    Month = month;
+                    Year = year;
+                }
+
+                public DateTime ToDate() => new DateTime(Year, Month, Day);
+                public override string ToString() => $"{Day:D2}/{Month:D2}/{Year}";
+            }
+
+            class Worker : IComparable<Worker>
+            {
+                public int Code { get; set; }
+                public string Name { get; set; }
+                public char Gender { get; set; }
+                public JobLevel Position { get; set; }
+                public decimal Wage { get; set; }
+                public StartDateInfo Started { get; set; }
+
+                public Worker(int code, string name, char gender, JobLevel level, decimal wage, StartDateInfo date)
+                {
+                    Code = code;
+                    Name = name;
+                    Gender = gender == 'M' || gender == 'F' ? gender : throw new ArgumentException("Gender must be M or F");
+                    Position = level;
+                    Wage = wage >= 0 ? wage : throw new ArgumentException("Wage must be non-negative");
+                    Started = date;
+                }
+
+                public int CompareTo(Worker other)
+                {
+                    return this.Started.ToDate().CompareTo(other.Started.ToDate());
+                }
+
+                public void PrintDetails()
+                {
+                    Console.WriteLine($"Code: {Code}, Name: {Name}, Role: {Position}, Gender: {Gender}, " +
+                                      $"Wage: {Wage:C}, Started: {Started}");
+                }
+                #endregion
+
+            }
+            static void Main(string[] args)
+            {
+                #region Q1 Design and implement a Class for the employees in a company:
+
+                Employee emp = new Employee(1, "Alice", 'F', SecurityLevel.Developer, 8500);
+                Console.WriteLine(emp);
+                #endregion
+
+                #region Q2 Develop a Class to represent the Hiring Date Data
+                HireDate date = new HireDate(15, 5, 2021);
+                Console.WriteLine("Hire Date: " + date);
+                #endregion
+
+                #region Q3 Create an array of Employees with size three a DBA, Guest and the third one is security officer who have full permissions
+                StaffMember[] staffArray = new StaffMember[3];
+
+                staffArray[0] = new StaffMember(1, "Sarah", 'F', AccessLevel.DBA, 12000m, new JobStartDate(1, 1, 2020));
+                staffArray[1] = new StaffMember(2, "Mark", 'M', AccessLevel.Guest, 6000m, new JobStartDate(15, 4, 2023));
+                staffArray[2] = new StaffMember(3, "Adam", 'M', AccessLevel.SecurityOfficer, 15000m, new JobStartDate(20, 8, 2018));
+
+                Console.WriteLine("=== Staff List ===");
+                foreach (var staff in staffArray)
+                    Console.WriteLine(staff);
+                #endregion
+
+                #region Q4 Sort the employees based on their hire date then Print the sorted array.
+                Worker[] team = new Worker[]
         {
-            #region Q1 Design and implement a Class for the employees in a company:
+            new Worker(1, "Noor", 'F', JobLevel.Guest, 5200, new StartDateInfo(10, 3, 2023)),
+            new Worker(2, "Hassan", 'M', JobLevel.SecurityOfficer, 15000, new StartDateInfo(25, 6, 2019)),
+            new Worker(3, "Dina", 'F', JobLevel.DBA, 13000, new StartDateInfo(5, 1, 2021))
+        };
 
-            Employee emp = new Employee(1, "Alice", 'F', SecurityLevel.Developer, 8500);
-            Console.WriteLine(emp);
-            #endregion
+                Console.WriteLine("🔸 Before Sorting:");
+                foreach (var w in team)
+                    w.PrintDetails();
 
-            #region Q2 Develop a Class to represent the Hiring Date Data
-            HireDate date = new HireDate(15, 5, 2021);
-            Console.WriteLine("Hire Date: " + date);
-            #endregion
+                Array.Sort(team); // Sorting using CompareTo()
 
-            #region Q3 Create an array of Employees with size three a DBA, Guest and the third one is security officer who have full permissions
-            StaffMember[] staffArray = new StaffMember[3];
+                Console.WriteLine("\n🔹 After Sorting by Start Date:");
+                foreach (var w in team)
+                    w.PrintDetails();
 
-            staffArray[0] = new StaffMember(1, "Sarah", 'F', AccessLevel.DBA, 12000m, new JobStartDate(1, 1, 2020));
-            staffArray[1] = new StaffMember(2, "Mark", 'M', AccessLevel.Guest, 6000m, new JobStartDate(15, 4, 2023));
-            staffArray[2] = new StaffMember(3, "Adam", 'M', AccessLevel.SecurityOfficer, 15000m, new JobStartDate(20, 8, 2018));
-
-            Console.WriteLine("=== Staff List ===");
-            foreach (var staff in staffArray)
-                Console.WriteLine(staff);
-            #endregion
+                Console.WriteLine("\n Boxing/Unboxing Count: 0");
+                Console.WriteLine(" Reason: No boxing because 'Worker' is a reference type (class). Sorting uses CompareTo safely.");
+                #endregion
+            }
+        }
         }
     }
-}
+
