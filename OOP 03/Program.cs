@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 
 namespace OOP_03
 {
@@ -269,6 +270,47 @@ namespace OOP_03
                 }
                 #endregion
 
+                #region Q5 Design a program for a library management system where
+                class Book
+                {
+                    public string Title { get; set; } = string.Empty;
+                    public string Author { get; set; } = string.Empty;
+                    public string ISBN { get; set; } = string.Empty;
+
+                    public virtual void DisplayInfo()
+                    {
+                        Console.WriteLine($"📘 Title: {Title}");
+                        Console.WriteLine($"✍️  Author: {Author}");
+                        Console.WriteLine($"🔢 ISBN: {ISBN}");
+                    }
+                }
+
+                // Derived class 1
+                class EBook : Book
+                {
+                    public double FileSize { get; set; }
+
+                    public override void DisplayInfo()
+                    {
+                        base.DisplayInfo();
+                        Console.WriteLine($"💾 File Size: {FileSize} MB\n");
+                    }
+                }
+
+                // Derived class 2
+                class PrintedBook : Book
+                {
+                    public int PageCount { get; set; }
+
+                    public override void DisplayInfo()
+                    {
+                        base.DisplayInfo();
+                        Console.WriteLine($"📄 Page Count: {PageCount} pages\n");
+                    }
+                }
+
+                #endregion
+
             }
             static void Main(string[] args)
             {
@@ -316,8 +358,40 @@ namespace OOP_03
                 Console.WriteLine("\n Boxing/Unboxing Count: 0");
                 Console.WriteLine(" Reason: No boxing because 'Worker' is a reference type (class). Sorting uses CompareTo safely.");
                 #endregion
+
+                #region Q5 Design a program for a library management system where
+                Console.WriteLine("📚 Library Management System\n");
+
+                // Create an EBook
+                EBook ebook = new EBook
+                {
+                    Title = "Mastering C#",
+                    Author = "Ahmed Zaki",
+                    ISBN = "111-222-333",
+                    FileSize = 4.5
+                };
+
+                // Create a PrintedBook
+                PrintedBook printed = new PrintedBook
+                {
+                    Title = "OOP Concepts",
+                    Author = "Sara Kamal",
+                    ISBN = "444-555-666",
+                    PageCount = 350
+                };
+
+                // Store both in an array (polymorphism)
+                Book[] library = new Book[] { ebook, printed };
+
+                // Display all book details
+                foreach (Book book in library)
+                {
+                    book.DisplayInfo();
+                }
+
+                Console.WriteLine("✅ Demonstration Complete.");
+                #endregion
             }
         }
-        }
     }
-
+}
